@@ -1,8 +1,5 @@
-
 (function( $ ) {
-
   $.fn.camRollSlider = function() {
-
     var wrapper      = this;
     var screenRoll   = this.find('.crs-screen-roll');
     var screenItems  = this.find('.crs-screen-item');
@@ -13,14 +10,13 @@
     
     var current;
 
-    // methods
+    // Methods
 
-    function moveScreenTo(index, elem) {
+    function moveScreenTo(index) {
       screenRoll.css('left', -wrapper.width() * index);
     }
 
-    function moveBarTo(index, elem) {
-
+    function moveBarTo(index) {
       var barRollPos = (barRollWrap.width() / 2) 
         - (barItem.width() / 2)
         - $(barItem[index]).position().left;
@@ -29,9 +25,9 @@
     }
 
     function moveToItem(target) {
-
       var index;
-      if(typeof(target) == 'number') {
+
+      if(typeof target  === 'number') {
         index = target;
       } else {
         index = $(target).index();
@@ -44,19 +40,17 @@
     }
 
     function setSizePos() {
-      
-      // set screen roll width
+      // Set screen roll width
       screenRoll.css('width', screenRoll.children().length * wrapper.width() );
       
-      // set screen items width
+      // Set screen items width
       screenItems.css('width', wrapper.width() );
       
-      // set bar roll width
+      // Set bar roll width
       barRoll.css('width', (barRoll.children().length * barFirstItem.width())
        + ((barRoll.children().length-1) * parseInt(barFirstItem.css('margin-right'))) );
 
-      //set bar roll pos
-
+      // Set bar roll pos
       barRoll.css('transition', 'all');
       screenRoll.css('transition', 'all');
 
@@ -68,12 +62,13 @@
       }, 0);
     }
 
-    // initial
+    // Initial
+    
     current = 0;
     setSizePos();
-
-    // events
-
+    
+    // Events
+    
     barItem.click(function() {
       moveToItem(this);
     });
@@ -82,8 +77,7 @@
       setSizePos();
     });
 
-    // return jQuery chain
+    // Return jQuery chain
     return this;
   };
-
 }( jQuery ));

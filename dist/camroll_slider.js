@@ -1,8 +1,5 @@
-
 (function( $ ) {
-
   $.fn.camRollSlider = function() {
-
     var wrapper      = this;
     var screenRoll   = this.find('.crs-screen-roll');
     var screenItems  = this.find('.crs-screen-item');
@@ -13,14 +10,11 @@
     
     var current;
 
-    // methods
-
-    function moveScreenTo(index, elem) {
+    function moveScreenTo(index) {
       screenRoll.css('left', -wrapper.width() * index);
     }
 
-    function moveBarTo(index, elem) {
-
+    function moveBarTo(index) {
       var barRollPos = (barRollWrap.width() / 2) 
         - (barItem.width() / 2)
         - $(barItem[index]).position().left;
@@ -29,9 +23,9 @@
     }
 
     function moveToItem(target) {
-
       var index;
-      if(typeof(target) == 'number') {
+
+      if(typeof target  === 'number') {
         index = target;
       } else {
         index = $(target).index();
@@ -44,7 +38,6 @@
     }
 
     function setSizePos() {
-      
       // set screen roll width
       screenRoll.css('width', screenRoll.children().length * wrapper.width() );
       
@@ -56,7 +49,6 @@
        + ((barRoll.children().length-1) * parseInt(barFirstItem.css('margin-right'))) );
 
       //set bar roll pos
-
       barRoll.css('transition', 'all');
       screenRoll.css('transition', 'all');
 
@@ -72,8 +64,6 @@
     current = 0;
     setSizePos();
 
-    // events
-
     barItem.click(function() {
       moveToItem(this);
     });
@@ -85,5 +75,4 @@
     // return jQuery chain
     return this;
   };
-
 }( jQuery ));

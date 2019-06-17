@@ -1,82 +1,87 @@
+const { series, parallel, src, dest } = require('gulp');
+const notify = require('gulp-notify');
+const rename = require('gulp-rename');
+const cleanCSS = require('gulp-clean-css');
+const uglify = require('gulp-uglify');
 
-// include gulp and plugins
+const del = require('del');
 
-const gulp     = require('gulp'),
-      notify   = require("gulp-notify"),
-      rename   = require('gulp-rename'),
-      cleanCSS = require('gulp-clean-css'),
-      uglify   = require('gulp-uglify'),
-      del      = require('del');
-
-// file locations
-
-let paths = {
-  cssIn:    'src/*.css',
-  cssOut:   'dist/',
+const paths = {
+  src: 'src/',
+  dist: 'dist/',
+  cssIn: 'src/*.css',
   cssClean: 'dist/*.css',
-  jsIn:     'src/*.js',
-  jsOut:    'dist/',
-  jsClean:  'dist/*.js'
+  jsIn: 'src/*.js',
+  jsClean: 'dist/*.js',
+};
+
+/**
+ * Clean assets in build folder
+ *
+ * @param {requestCallback} cb - Default callback required by Gulp.
+ */
+function clean(cb) {
+  del(
+    []
+      .concat(paths.cssClean)
+      .concat(paths.jsClean)
+  );
+  cb();
 }
 
-// clean
-gulp.task('clean', () => {
-  del( [].concat(paths.jsClean).concat(paths.cssClean) );
-});
+/**
+ * Copy and minify CSS files
+ */
+function css() {
+  return (
+    src(paths.cssIn)
+      // output not minified css
+      .pipe(dest(paths.dist))
+      // minify css
+      .pipe(cleanCSS())
+      .pipe(
+        rename({
+          extname: '.min.css',
+        }),
+      )
+      // output minified css
+      .pipe(dest(paths.dist))
+  );
+}
 
-// css
-gulp.task('css', () => {
+/**
+ * Copy and minify JS files
+ */
+function js() {
+  return (
+    src(paths.jsIn)
+      // output not minified
+      .pipe(dest(paths.dist))
+      // minify
+      .pipe(uglify())
+      // handle minifier errors
+      .on(
+        'error',
+        notify.onError(error => {
+          return { title: 'UglifyJS Error', message: error.message };
+        }),
+      )
+      // rename minified file
+      .pipe(
+        rename({
+          extname: '.min.js',
+        }),
+      )
+      // output minified
+      .pipe(dest(paths.dist))
+  );
+}
 
-  // clean old
-  del(paths.cssClean);
+const build = parallel(css, js);
 
-  // compile
-  return gulp.src(paths.cssIn)
+exports.clean = clean;
+exports.css = css;
+exports.js = js;
+exports.build = build;
 
-    // output not minified css
-    .pipe(gulp.dest(paths.cssOut))
-
-    // minify css
-    .pipe(cleanCSS())
-    .pipe(rename({
-      extname: ".min.css"
-    }))
-
-    // output minified css
-    .pipe(gulp.dest(paths.cssOut));
-});
-
-// js
-gulp.task('js', () => {
-
-  // clean old
-  del(paths.jsClean);
-
-  // output
-  return gulp.src(paths.jsIn)
-
-    // output not minified
-    .pipe(gulp.dest(paths.jsOut))
-
-    // minify
-    .pipe(uglify())
-
-    // handle minifier errors
-    .on('error', notify.onError((error) => {
-      return {title: 'UglifyJS Error', message: error.message};
-    }))
-
-    // rename minified file
-    .pipe(rename({
-      extname: '.min.js'
-    }))
-
-    // output minified
-    .pipe(gulp.dest(paths.jsOut));
-});
-
-// build
-gulp.task('build', ['css', 'js']);
-
-// default task
-gulp.task('default', ['build']);
+exports.default = build;
