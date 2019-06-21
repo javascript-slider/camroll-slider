@@ -1,5 +1,5 @@
 # camRoll Slider
-http://dim1100010.info/projects/camroll_slider/index.html
+http://dim1100010.info/projects/camroll-slider/index.html
 ## Usage
 ```
 <head>
