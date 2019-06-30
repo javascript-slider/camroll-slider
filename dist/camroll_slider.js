@@ -10,6 +10,8 @@
     
     var current;
 
+    // Methods
+
     function moveScreenTo(index) {
       screenRoll.css('left', -wrapper.width() * index);
     }
@@ -38,17 +40,17 @@
     }
 
     function setSizePos() {
-      // set screen roll width
+      // Set screen roll width
       screenRoll.css('width', screenRoll.children().length * wrapper.width() );
       
-      // set screen items width
+      // Set screen items width
       screenItems.css('width', wrapper.width() );
       
-      // set bar roll width
+      // Set bar roll width
       barRoll.css('width', (barRoll.children().length * barFirstItem.width())
        + ((barRoll.children().length-1) * parseInt(barFirstItem.css('margin-right'))) );
 
-      //set bar roll pos
+      // Set bar roll pos
       barRoll.css('transition', 'all');
       screenRoll.css('transition', 'all');
 
@@ -60,10 +62,13 @@
       }, 0);
     }
 
-    // initial
+    // Initial
+    
     current = 0;
     setSizePos();
-
+    
+    // Events
+    
     barItem.click(function() {
       moveToItem(this);
     });
@@ -72,7 +77,7 @@
       setSizePos();
     });
 
-    // return jQuery chain
+    // Return jQuery chain
     return this;
   };
 }( jQuery ));
